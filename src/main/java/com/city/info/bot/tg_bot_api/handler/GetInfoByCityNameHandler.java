@@ -34,13 +34,13 @@ public class GetInfoByCityNameHandler implements InputMessageHandler {
     }
 
     @Override
-    public SendMessage handle(Message inputMsg) {
+    public SendMessage handle(Message message) {
+
+        int userId = message.getFrom().getId();
+        long chatId = message.getChatId();
+        String cityName = message.getText();
 
         SendMessage replyToUser;
-
-        int userId = inputMsg.getFrom().getId();
-        long chatId = inputMsg.getChatId();
-        String cityName = inputMsg.getText();
 
         Optional<City> cityByName = cityService.getCityByName(cityName);
 

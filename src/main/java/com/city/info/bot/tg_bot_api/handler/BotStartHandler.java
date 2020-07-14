@@ -29,10 +29,10 @@ public class BotStartHandler implements InputMessageHandler {
         return BotState.BOT_START_REPLY;
     }
 
-    private SendMessage processUsersInput(Message inputMsg) {
+    private SendMessage processUsersInput(Message message) {
 
-        int userId = inputMsg.getFrom().getId();
-        long chatId = inputMsg.getChatId();
+        int userId = message.getFrom().getId();
+        long chatId = message.getChatId();
 
         SendMessage replyToUser =
                 messagesService.getReplyMessage(chatId, "bot.start.reply");
