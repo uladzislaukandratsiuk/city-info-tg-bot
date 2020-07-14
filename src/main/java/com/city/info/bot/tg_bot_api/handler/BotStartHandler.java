@@ -37,7 +37,7 @@ public class BotStartHandler implements InputMessageHandler {
         SendMessage replyToUser =
                 messagesService.getReplyMessage(chatId, "bot.start.reply");
 
-        userDataCache.setCurrentUserBotState(userId, BotState.GET_CITY_NAME);
+        userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
 
         return replyToUser;
     }
