@@ -1,10 +1,12 @@
 package com.city.info.bot.cache;
 
 import com.city.info.bot.tg_bot_api.BotState;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class UserDataCache implements DataCache {
 
     private final Map<Integer, BotState> usersBotStates;
