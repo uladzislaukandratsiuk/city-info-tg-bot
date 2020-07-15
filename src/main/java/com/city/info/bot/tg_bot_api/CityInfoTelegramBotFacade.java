@@ -3,6 +3,7 @@ package com.city.info.bot.tg_bot_api;
 import com.city.info.bot.cache.UserDataCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,12 +15,13 @@ public class CityInfoTelegramBotFacade {
     private final BotStateContext botStateContext;
     private final UserDataCache userDataCache;
 
-    public CityInfoTelegramBotFacade(BotStateContext botStateContext, UserDataCache userDataCache) {
+    public CityInfoTelegramBotFacade(BotStateContext botStateContext,
+                                     UserDataCache userDataCache) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
     }
 
-    public SendMessage handleUpdate(Update update) {
+    public BotApiMethod<?> handleUpdate(Update update) {
 
         SendMessage replyMessage = null;
         Message message = update.getMessage();
@@ -43,11 +45,8 @@ public class CityInfoTelegramBotFacade {
             case "/start":
                 botState = BotState.BOT_START_REPLY;
                 break;
-            case "Добавить город":
-                botState = BotState.ADDING_NEW_CITY;
-                break;
-            case "Помощь":
-                botState = BotState.SHOW_HELP_MENU;
+            case "/menu":
+                botState = BotState.CITY_CRUD_MENU;
                 break;
             default:
                 botState = userDataCache.getCurrentUserBotState(userId);
@@ -60,5 +59,4 @@ public class CityInfoTelegramBotFacade {
 
         return replyMessage;
     }
-
 }

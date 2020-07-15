@@ -8,6 +8,9 @@ public enum BotState {
     ASK_CITY_NAME,
     ASK_CITY_INFO,
     CITY_DATA_FILLED,
+    CITY_CRUD_MENU,
+    SHOW_LIST_OF_CITIES,
+    UPDATE_CITY,
+    REMOVE_CITY,
     SHOW_MAIN_MENU,
-    SHOW_HELP_MENU,
 }
