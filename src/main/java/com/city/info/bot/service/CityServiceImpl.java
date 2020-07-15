@@ -32,12 +32,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public Optional<City> getCityById(Integer cityId) {
-        return repository.findById(cityId);
-    }
-
-    @Override
-    public void deleteCityById(Integer cityId) {
-        repository.deleteById(cityId);
+    public void updateCityInfo(String info, String name) {
+        repository.updateCityInfoByName(info, name);
     }
 }

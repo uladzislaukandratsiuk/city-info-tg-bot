@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -24,6 +25,15 @@ public class CityInfoTelegramBotFacade {
     public BotApiMethod<?> handleUpdate(Update update) {
 
         SendMessage replyMessage = null;
+
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            log.info("New callbackQuery from User: {}, userId: {}, with data: {}",
+                    update.getCallbackQuery().getFrom().getUserName(),
+                    callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
+            return processCallbackQuery(callbackQuery);
+        }
+
         Message message = update.getMessage();
 
         if (message != null && message.hasText()) {
@@ -58,5 +68,40 @@ public class CityInfoTelegramBotFacade {
         replyMessage = botStateContext.processInputMessage(botState, message);
 
         return replyMessage;
+    }
+
+    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
+        final long chatId = buttonQuery.getMessage().getChatId();
+        final int userId = buttonQuery.getFrom().getId();
+        BotApiMethod<?> callBackAnswer;
+
+        switch (buttonQuery.getData()) {
+            case "listOfCitiesButton":
+                callBackAnswer = new SendMessage(chatId,
+                        "Введите название города для получения информации!");
+                userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
+                break;
+            case "addNewCityButton":
+                callBackAnswer = new SendMessage(chatId,
+                        "Введите название города для добавления!");
+                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME);
+                break;
+            case "updateCityButton":
+                callBackAnswer = new SendMessage(chatId,
+                        "Введите название города для обновления!");
+                userDataCache.setCurrentUserBotState(userId, BotState.UPDATING_CITY);
+                break;
+            case "removeCityButton":
+                callBackAnswer = new SendMessage(chatId,
+                        "Введите название города для удаления!");
+                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_INFO);
+                break;
+            default:
+                callBackAnswer = new SendMessage(chatId, "");
+                userDataCache.setCurrentUserBotState(userId,
+                        userDataCache.getCurrentUserBotState(userId));
+        }
+
+        return callBackAnswer;
     }
 }

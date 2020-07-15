@@ -13,7 +13,5 @@ public interface CityService {
 
     Optional<City> getCityByName(String cityName);
 
-    Optional<City> getCityById(Integer cityId);
-
-    void deleteCityById(Integer cityId);
+    void updateCityInfo(String info, String name);
 }

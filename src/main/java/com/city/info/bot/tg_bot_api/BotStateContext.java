@@ -27,19 +27,19 @@ public class BotStateContext {
     }
 
     private InputMessageHandler findMessageHandler(BotState currentState) {
-        if (isFillingCityDataState(currentState)) {
+        if (isAddingCityDataState(currentState)) {
             return messageHandlers.get(BotState.ADDING_NEW_CITY);
         }
 
         return messageHandlers.get(currentState);
     }
 
-    private boolean isFillingCityDataState(BotState currentState) {
+    private boolean isAddingCityDataState(BotState currentState) {
         switch (currentState) {
             case ASK_CITY_NAME:
             case ASK_CITY_INFO:
             case ADDING_NEW_CITY:
-            case CITY_DATA_FILLED:
+            case CITY_DATA_ADDED:
                 return true;
             default:
                 return false;
