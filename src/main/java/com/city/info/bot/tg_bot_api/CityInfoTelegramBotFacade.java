@@ -44,7 +44,7 @@ public class CityInfoTelegramBotFacade {
                 botState = BotState.BOT_START_REPLY;
                 break;
             case "Добавить город":
-                botState = BotState.ADD_NEW_CITY;
+                botState = BotState.ADDING_NEW_CITY;
                 break;
             case "Помощь":
                 botState = BotState.SHOW_HELP_MENU;

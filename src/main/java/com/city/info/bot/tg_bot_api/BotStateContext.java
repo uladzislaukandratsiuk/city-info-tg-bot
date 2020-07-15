@@ -28,7 +28,7 @@ public class BotStateContext {
 
     private InputMessageHandler findMessageHandler(BotState currentState) {
         if (isFillingCityDataState(currentState)) {
-            return messageHandlers.get(BotState.FILLING_CITY_DATA);
+            return messageHandlers.get(BotState.ADDING_NEW_CITY);
         }
 
         return messageHandlers.get(currentState);
@@ -38,7 +38,7 @@ public class BotStateContext {
         switch (currentState) {
             case ASK_CITY_NAME:
             case ASK_CITY_INFO:
-            case FILLING_CITY_DATA:
+            case ADDING_NEW_CITY:
             case CITY_DATA_FILLED:
                 return true;
             default:

@@ -36,9 +36,9 @@ public class CityNotFoundHandler implements InputMessageHandler {
         if (userResponse.matches("да|Да")) {
 
             replyToUser =
-                    messagesService.getReplyMessage(chatId, "bot.add.city");
+                    messagesService.getReplyMessage(chatId, "bot.ask.city.name");
 
-            userDataCache.setCurrentUserBotState(userId, BotState.ADD_NEW_CITY);
+            userDataCache.setCurrentUserBotState(userId, BotState.ADDING_NEW_CITY);
 
         } else {
 
