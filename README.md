@@ -77,11 +77,18 @@ Fields meaning:
   Expected output:
   
   ![set WebHook](documentation/images/excpected_output.png)
+  
+### Install & Set up    
+![Install & Set up](documentation/images/bot_set_up.gif)
 
 ### Running bot
 
   Run terminal command in project directory:
   
-    $ ./mvnw spring-boot:run  
+    $ ./mvnw spring-boot:run
+
+### Using bot   
+![Using bot](documentation/images/bot_run.gif)
+      
 
 >Produced by Vladiskav Kondratuk 2020

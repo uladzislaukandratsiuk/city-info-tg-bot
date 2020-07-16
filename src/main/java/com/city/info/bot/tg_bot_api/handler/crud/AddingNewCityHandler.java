@@ -52,7 +52,7 @@ public class AddingNewCityHandler implements InputMessageHandler {
         int userId = message.getFrom().getId();
         long chatId = message.getChatId();
 
-        City newCity = userDataCache.getUserCityData(userId);
+        City cacheCity = userDataCache.getUserCityData(userId);
         BotState botState = userDataCache.getCurrentUserBotState(userId);
 
         SendMessage replyToUser = null;
@@ -63,22 +63,26 @@ public class AddingNewCityHandler implements InputMessageHandler {
                 userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME);
             } else {
                 replyToUser = messagesService.getReplyMessage(chatId, "bot.ask.city.info");
-                newCity.setName(userResponse);
+                cacheCity.setName(userResponse);
                 userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_INFO);
             }
         }
 
         if (botState.equals(BotState.ASK_CITY_INFO)) {
-            newCity.setInfo(userResponse);
+            cacheCity.setInfo(userResponse);
             replyToUser = new SendMessage(
                     chatId, String.format("Город %s, с инофрмацией: \n%s \nБыл добавлен!",
-                    newCity.getName(), newCity.getInfo()));
+                    cacheCity.getName(), cacheCity.getInfo()));
+
+            City newCity = new City();
+            newCity.setName(cacheCity.getName());
+            newCity.setInfo(cacheCity.getInfo());
 
             cityService.saveCity(newCity);
             replyToUser.setReplyMarkup(getNextButton());
         }
 
-        userDataCache.setUserCityData(userId, newCity);
+        userDataCache.setUserCityData(userId, cacheCity);
 
         return replyToUser;
     }
