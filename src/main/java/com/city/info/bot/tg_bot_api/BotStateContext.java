@@ -30,6 +30,9 @@ public class BotStateContext {
         if (isAddingCityDataState(currentState)) {
             return messageHandlers.get(BotState.ADDING_NEW_CITY);
         }
+        if (isUpdatingCityDataState(currentState)) {
+            return messageHandlers.get(BotState.UPDATING_CITY);
+        }
 
         return messageHandlers.get(currentState);
     }
@@ -40,6 +43,18 @@ public class BotStateContext {
             case ASK_CITY_INFO:
             case ADDING_NEW_CITY:
             case CITY_DATA_ADDED:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isUpdatingCityDataState(BotState currentState) {
+        switch (currentState) {
+            case ASK_CITY_NAME_UPDATE:
+            case ASK_CITY_INFO_UPDATE:
+            case UPDATING_CITY:
+            case CITY_DATA_UPDATED:
                 return true;
             default:
                 return false;

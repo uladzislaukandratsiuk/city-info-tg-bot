@@ -11,15 +11,15 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
-public class AddingNewCityHandler implements InputMessageHandler {
+public class UpdateCityHandler implements InputMessageHandler {
 
     private final UserDataCache userDataCache;
     private final ChatReplyMessageService messagesService;
     private final CityService cityService;
 
-    public AddingNewCityHandler(UserDataCache userDataCache,
-                                ChatReplyMessageService messagesService,
-                                CityService cityService) {
+    public UpdateCityHandler(UserDataCache userDataCache,
+                             ChatReplyMessageService messagesService,
+                             CityService cityService) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
         this.cityService = cityService;
@@ -27,16 +27,16 @@ public class AddingNewCityHandler implements InputMessageHandler {
 
     @Override
     public BotState getHandlerName() {
-        return BotState.ADDING_NEW_CITY;
+        return BotState.UPDATING_CITY;
     }
 
     @Override
     public SendMessage handle(Message message) {
         if (userDataCache.getCurrentUserBotState(message.getFrom().getId())
-                .equals(BotState.ADDING_NEW_CITY)) {
+                .equals(BotState.UPDATING_CITY)) {
 
             userDataCache.setCurrentUserBotState(message.getFrom().getId(),
-                    BotState.ASK_CITY_NAME);
+                    BotState.ASK_CITY_NAME_UPDATE);
         }
         return processUsersInput(message);
     }
@@ -47,40 +47,40 @@ public class AddingNewCityHandler implements InputMessageHandler {
         int userId = message.getFrom().getId();
         long chatId = message.getChatId();
 
-        City newCity = userDataCache.getUserCityData(userId);
+        City cityToUpdate = userDataCache.getUserCityData(userId);
         BotState botState = userDataCache.getCurrentUserBotState(userId);
 
         SendMessage replyToUser = null;
 
-        if (botState.equals(BotState.ASK_CITY_NAME)) {
+        if (botState.equals(BotState.ASK_CITY_NAME_UPDATE)) {
             if (cityService.getCityByName(userResponse).isPresent()) {
-                replyToUser = messagesService.getReplyMessage(chatId, "bot.city.exist");
-                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME);
-            } else {
                 replyToUser = messagesService.getReplyMessage(chatId, "bot.ask.city.info");
-                newCity.setName(userResponse);
-                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_INFO);
+                cityToUpdate = cityService.getCityByName(userResponse).get();
+                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_INFO_UPDATE);
+            } else {
+                replyToUser = messagesService.getReplyMessage(chatId, "bot.city.not.exist");
+                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME_UPDATE);
             }
         }
 
-        if (botState.equals(BotState.ASK_CITY_INFO)) {
-            newCity.setInfo(userResponse);
+        if (botState.equals(BotState.ASK_CITY_INFO_UPDATE)) {
+            cityToUpdate.setInfo(userResponse);
             replyToUser = new SendMessage(
-                    chatId, String.format("Город %s, с инофрмацией: \n%s \nБыл добавлен!" +
+                    chatId, String.format("Город %s, с инофрмацией: \n%s \nБыл Обновлен!" +
                             "\nВведите \"ок\" чтобы продолжить!",
-                    newCity.getName(), newCity.getInfo()));
+                    cityToUpdate.getName(), cityToUpdate.getInfo()));
 
-            cityService.saveCity(newCity);
+            cityService.updateCityInfo(cityToUpdate.getInfo(), cityToUpdate.getName());
 
-            userDataCache.setCurrentUserBotState(userId, BotState.CITY_DATA_ADDED);
+            userDataCache.setCurrentUserBotState(userId, BotState.CITY_DATA_UPDATED);
         }
 
-        if (botState.equals(BotState.CITY_DATA_ADDED)) {
+        if (botState.equals(BotState.CITY_DATA_UPDATED)) {
             replyToUser = messagesService.getReplyMessage(chatId, "bot.enter.city.name");
             userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
         }
 
-        userDataCache.setUserCityData(userId, newCity);
+        userDataCache.setUserCityData(userId, cityToUpdate);
 
         return replyToUser;
     }
