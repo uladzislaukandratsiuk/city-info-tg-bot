@@ -55,9 +55,7 @@ public class GetInfoByCityNameHandler implements InputMessageHandler {
             userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
 
         } else {
-
             replyToUser = messagesService.getReplyMessage(chatId, "bot.city.not.found");
-
             userDataCache.setCurrentUserBotState(userId, BotState.CITY_NOT_FOUND);
         }
 

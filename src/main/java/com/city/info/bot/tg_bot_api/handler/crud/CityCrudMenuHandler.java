@@ -38,7 +38,6 @@ public class CityCrudMenuHandler implements InputMessageHandler {
         SendMessage replyToUser =
                 messagesService.getReplyMessage(chatId, "bot.city.crud.menu");
         replyToUser.setReplyMarkup(getCrudMenuButtons());
-
         userDataCache.setCurrentUserBotState(userId, BotState.CITY_CRUD_MENU);
 
         return replyToUser;

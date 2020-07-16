@@ -77,8 +77,8 @@ public class CityInfoTelegramBotFacade {
 
         switch (buttonQuery.getData()) {
             case "listOfCitiesButton":
-                callBackAnswer = new SendMessage(chatId,
-                        "Введите название города для получения информации!");
+                callBackAnswer = botStateContext
+                        .processInputMessage(BotState.SHOW_LIST_OF_CITIES, buttonQuery.getMessage());
                 userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
                 break;
             case "addNewCityButton":
@@ -95,6 +95,11 @@ public class CityInfoTelegramBotFacade {
                 callBackAnswer = new SendMessage(chatId,
                         "Введите название города для удаления!");
                 userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_INFO);
+                break;
+            case "nextButton":
+                callBackAnswer = new SendMessage(chatId,
+                        "Введите название города для получения информации!");
+                userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
                 break;
             default:
                 callBackAnswer = new SendMessage(chatId, "");

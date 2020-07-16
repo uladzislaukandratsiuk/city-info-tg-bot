@@ -9,6 +9,11 @@ import com.city.info.bot.tg_bot_api.handler.InputMessageHandler;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class AddingNewCityHandler implements InputMessageHandler {
@@ -66,22 +71,32 @@ public class AddingNewCityHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_CITY_INFO)) {
             newCity.setInfo(userResponse);
             replyToUser = new SendMessage(
-                    chatId, String.format("Город %s, с инофрмацией: \n%s \nБыл добавлен!" +
-                            "\nВведите \"ок\" чтобы продолжить!",
+                    chatId, String.format("Город %s, с инофрмацией: \n%s \nБыл добавлен!",
                     newCity.getName(), newCity.getInfo()));
 
             cityService.saveCity(newCity);
-
-            userDataCache.setCurrentUserBotState(userId, BotState.CITY_DATA_ADDED);
-        }
-
-        if (botState.equals(BotState.CITY_DATA_ADDED)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "bot.enter.city.name");
-            userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
+            replyToUser.setReplyMarkup(getNextButton());
         }
 
         userDataCache.setUserCityData(userId, newCity);
 
         return replyToUser;
+    }
+
+    private InlineKeyboardMarkup getNextButton() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton next = new InlineKeyboardButton().setText("Продолжить");
+
+        next.setCallbackData("nextButton");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(next);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
     }
 }
