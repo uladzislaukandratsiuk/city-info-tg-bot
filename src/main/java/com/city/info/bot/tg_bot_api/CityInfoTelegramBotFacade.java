@@ -82,6 +82,7 @@ public class CityInfoTelegramBotFacade {
                 userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);
                 break;
             case "addNewCityButton":
+            case "yesButton":
                 callBackAnswer = new SendMessage(chatId,
                         "Введите название города для добавления!");
                 userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME);
@@ -97,6 +98,7 @@ public class CityInfoTelegramBotFacade {
                 userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME_REMOVE);
                 break;
             case "nextButton":
+            case "noButton":
                 callBackAnswer = new SendMessage(chatId,
                         "Введите название города для получения информации!");
                 userDataCache.setCurrentUserBotState(userId, BotState.GET_INFO_BY_CITY_NAME);

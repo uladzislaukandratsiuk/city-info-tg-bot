@@ -53,6 +53,7 @@ public class GetListOfCitiesHandler implements InputMessageHandler {
             List<String> listOfCitiesNames = new ArrayList<>();
             cities.forEach(city -> listOfCitiesNames.add(city.getName()));
             listOfCitiesNames.sort(Comparator.naturalOrder());
+            citiesNames.append("Список городов:\n");
             listOfCitiesNames.forEach(name -> citiesNames.append(name).append("\n"));
 
             replyToUser = new SendMessage(chatId, String.valueOf(citiesNames));

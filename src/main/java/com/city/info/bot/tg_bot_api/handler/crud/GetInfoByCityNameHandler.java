@@ -10,7 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -56,11 +60,29 @@ public class GetInfoByCityNameHandler implements InputMessageHandler {
 
         } else {
             replyToUser = messagesService.getReplyMessage(chatId, "bot.city.not.found");
-            userDataCache.setCurrentUserBotState(userId, BotState.CITY_NOT_FOUND);
+            replyToUser.setReplyMarkup(getYesNoButtons());
         }
 
         return replyToUser;
     }
 
+    private InlineKeyboardMarkup getYesNoButtons() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton yesButton = new InlineKeyboardButton().setText("Да");
+        InlineKeyboardButton noButton = new InlineKeyboardButton().setText("Нет");
 
+        yesButton.setCallbackData("yesButton");
+        noButton.setCallbackData("noButton");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(yesButton);
+        keyboardButtonsRow1.add(noButton);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
+    }
 }
