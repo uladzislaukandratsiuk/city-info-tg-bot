@@ -25,19 +25,25 @@ public class CityServiceImpl implements CityService {
 
     @Transactional
     @Override
-    public City saveCity(City city) {
-        return repository.save(city);
-    }
-
-    @Transactional
-    @Override
     public Optional<City> getCityByName(String cityName) {
         return repository.findByName(cityName);
     }
 
     @Transactional
     @Override
+    public void saveCity(City city) {
+        repository.save(city);
+    }
+
+    @Transactional
+    @Override
     public void updateCityInfo(String info, String name) {
         repository.setInfoForCity(info, name);
+    }
+
+    @Transactional
+    @Override
+    public void removeCity(String cityToRemove) {
+        repository.deleteCityByName(cityToRemove);
     }
 }

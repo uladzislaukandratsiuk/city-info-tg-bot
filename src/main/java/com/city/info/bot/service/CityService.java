@@ -9,9 +9,11 @@ public interface CityService {
 
     List<City> getAllCities();
 
-    City saveCity(City city);
-
     Optional<City> getCityByName(String cityName);
 
+    void saveCity(City city);
+
     void updateCityInfo(String info, String name);
+
+    void removeCity(String cityToRemove);
 }

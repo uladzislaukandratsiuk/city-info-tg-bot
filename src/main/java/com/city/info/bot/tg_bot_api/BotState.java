@@ -15,5 +15,5 @@ public enum BotState {
     ASK_CITY_NAME_UPDATE,
     ASK_CITY_INFO_UPDATE,
     REMOVE_CITY,
-    SHOW_MAIN_MENU,
+    ASK_CITY_NAME_REMOVE,
 }

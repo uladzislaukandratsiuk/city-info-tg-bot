@@ -17,4 +17,8 @@ public interface CityRepository extends JpaRepository<City, Integer> {
     @Modifying
     @Query("update City c set c.info = :info WHERE c.name = :name")
     void setInfoForCity(@Param("info") String info, @Param("name") String name);
+
+    @Modifying
+    @Query("delete from City c where c.name = :name")
+    void deleteCityByName(@Param("name") String name);
 }

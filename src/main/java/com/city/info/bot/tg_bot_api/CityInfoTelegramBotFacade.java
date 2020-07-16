@@ -94,7 +94,7 @@ public class CityInfoTelegramBotFacade {
             case "removeCityButton":
                 callBackAnswer = new SendMessage(chatId,
                         "Введите название города для удаления!");
-                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_INFO);
+                userDataCache.setCurrentUserBotState(userId, BotState.ASK_CITY_NAME_REMOVE);
                 break;
             case "nextButton":
                 callBackAnswer = new SendMessage(chatId,
